@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>দৃষ্টিভ্রম / Illusion Lab</title>
+<meta name="description" content="দৃষ্টিভ্রম / Illusion Lab: ঘূর্ণায়মান বর্গ, হারম্যান গ্রিড, অসম্ভব ত্রিভুজ ও আফটারইমেজের ইন্টারঅ্যাকটিভ গ্যালারি।">
+<style>
+:root{--ink:#14110f;--ink2:#221d19;--ivory:#f4ecdc;--ivory2:#b9ae98;--coral:#ff4d3d;--lime:#c6ff2e;
+--serif:ui-serif,Georgia,"Noto Serif Bengali","Kalpurush",serif;
+--sans:system-ui,-apple-system,"Segoe UI","Noto Sans Bengali","Nirmala UI","Siyam Rupali",sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--ivory);font:1.0625rem/1.8 var(--sans)}
+a{color:var(--lime)}
+:focus-visible{outline:3px solid var(--lime);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:0;background:var(--lime);color:var(--ink);padding:.6rem 1rem;z-index:20}
+.skip:focus{left:0}
+.wrap{width:min(1080px,100% - 2.5rem);margin-inline:auto}
+header{padding:2rem 0 1rem;border-bottom:1px solid #3a322b}
+.brand{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.brand b{font:700 .95rem var(--sans);letter-spacing:.28em;text-transform:uppercase;color:var(--coral)}
+.brand span{color:var(--ivory2);font-size:.9rem}
+h1{font:400 clamp(3rem,13vw,7rem)/1.05 var(--serif);margin:2.5rem 0 .5rem;letter-spacing:-.02em}
+h1 em{color:var(--lime);font-style:normal}
+.lead{max-width:36rem;color:var(--ivory2);font-size:1.15rem;margin:0 0 2rem}
+nav{display:flex;gap:.5rem;overflow-x:auto;padding:.25rem 0 .75rem}
+nav button,.btn{font:600 1rem var(--sans);cursor:pointer;color:var(--ivory);background:transparent;border:1.5px solid #5a4e43;border-radius:999px;padding:.6rem 1.1rem;white-space:nowrap;min-height:44px}
+nav button:hover,.btn:hover{border-color:var(--ivory)}
+nav button[aria-pressed="true"]{background:var(--ivory);color:var(--ink);border-color:var(--ivory)}
+.notice{margin:1.5rem auto;padding:1rem 1.25rem;border-left:5px solid var(--coral);background:var(--ink2);font-size:.97rem}
+.notice strong{color:var(--coral)}
+.bar{position:sticky;top:0;z-index:10;background:rgba(20,17,15,.94);backdrop-filter:blur(8px);border-bottom:1px solid #3a322b;padding:.7rem 0}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:.8rem 1.5rem;align-items:center}
+.bar label{display:flex;align-items:center;gap:.7rem;font-weight:600}
+input[type=range]{width:min(200px,40vw);accent-color:var(--coral);min-height:32px}
+#pauseBtn{background:var(--lime);color:var(--ink);border-color:var(--lime);font-weight:700}
+#pauseBtn:hover{background:#d8ff6a}
+#motionState{font-size:.9rem;color:var(--ivory2)}
+main{padding:2rem 0 3rem}
+.demo{display:grid;gap:2rem;padding:2.5rem 0;border-bottom:1px solid #3a322b;align-items:center}
+.demo[hidden]{display:none}
+h2{font:400 clamp(1.9rem,6vw,2.8rem)/1.2 var(--serif);margin:.2rem 0 1rem}
+.num{color:var(--coral);font:700 .85rem var(--sans);letter-spacing:.2em}
+.card p{margin:.6rem 0}
+.note{margin-top:1.2rem;padding:.9rem 1.1rem;background:var(--ivory);color:var(--ink);border-radius:4px;font-size:.96rem}
+.note b{color:#b1281b}
+.stage{display:grid;place-items:center;padding:1rem}
+@media(min-width:860px){.demo{grid-template-columns:1.1fr .9fr;gap:4rem}}
+/* spiral */
+.spiral{--tw:3.5deg;--dur:40s;position:relative;width:min(86vw,420px);aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--ink);animation:spin var(--dur) linear infinite;box-shadow:0 0 0 6px var(--ink),0 0 0 8px var(--coral)}
+.spiral span{position:absolute;inset:calc(var(--n)*1.7%);border:2px solid var(--coral);transform:rotate(calc(var(--n)*var(--tw)))}
+.spiral span:nth-child(odd){background:var(--ink)}
+.spiral span:nth-child(even){background:var(--ivory);border-color:var(--ink)}
+.spiral span:nth-child(4n){border-color:var(--lime)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.paused .spiral{animation-play-state:paused}
+/* hermann grid */
+.hg{--cell:hsl(28 14% 20%);display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(9px,2.6vw,16px);width:min(86vw,420px);aspect-ratio:1;background:var(--ivory);padding:clamp(9px,2.6vw,16px)}
+.hg span{background:var(--cell);border-radius:3px}
+/* triangle */
+.tri{width:min(80vw,380px);height:auto}
+/* afterimage */
+.after{width:min(86vw,360px);aspect-ratio:1;display:grid;place-items:center;background:var(--ivory);border:2px solid var(--ivory2);transition:background .3s}
+.after.on{background:var(--coral)}
+.after i{width:18px;height:18px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 3px var(--ivory)}
+.count{font:700 3rem var(--serif);margin:.8rem 0 0;color:var(--lime);min-height:1.3em}
+.row{display:flex;gap:.7rem;flex-wrap:wrap;margin:1rem 0}
+ol{padding-left:1.3rem}
+/* quiz */
+fieldset{border:1.5px solid #5a4e43;border-radius:6px;margin:0 0 1.2rem;padding:1rem 1.2rem}
+legend{padding:0 .5rem;font-weight:700}
+fieldset label{display:flex;gap:.7rem;align-items:center;padding:.45rem 0;cursor:pointer}
+input[type=radio]{accent-color:var(--coral);width:1.2rem;height:1.2rem}
+.fb{color:var(--lime);margin:.5rem 0 0;min-height:1.5em}
+footer{padding:2rem 0 3rem;color:var(--ivory2);font-size:.9rem;border-top:1px solid #3a322b}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">মূল অংশে যান</a>
+<header>
+<div class="wrap">
+<div class="brand"><b>Illusion Lab</b><span>চোখের ধাঁধার ছোট্ট গ্যালারি</span></div>
+<h1>দৃষ্টি<em>ভ্রম</em></h1>
+<p class="lead">দেখা মানে শুধু চোখে ছবি পড়া নয়, সেটাকে ব্যাখ্যা করাও। চারটি ছোট পরীক্ষায় দেখুন আলো, রং আর আকার কীভাবে আমাদের ধারণাকে বিভ্রান্ত করে।</p>
+<nav aria-label="প্রদর্শনী বেছে নিন" id="nav">
+<button type="button" data-show="all">সব দেখুন</button>
+<button type="button" data-show="spiral">ঘূর্ণায়মান বর্গ</button>
+<button type="button" data-show="grid">হারম্যান গ্রিড</button>
+<button type="button" data-show="triangle">অসম্ভব ত্রিভুজ</button>
+<button type="button" data-show="afterimage">আফটারইমেজ</button>
+<button type="button" data-show="quiz">কুইজ</button>
+</nav>
+</div>
+</header>
+
+<div class="wrap">
+<div class="notice" role="note"><strong>সংবেদনশীলতার সতর্কতা:</strong> এখানে ঘূর্ণন ও ঝিকিমিকি ভাব আছে। অস্বস্তি বোধ করলে সঙ্গে সঙ্গে থামুন, পর্দা থেকে চোখ সরিয়ে বিরতি নিন। আপনার ডিভাইসে গতি কমানোর সেটিং চালু থাকলে এখানে গতি বন্ধ অবস্থায় শুরু হয়। এটি চিকিৎসা পরামর্শ নয়।</div>
+</div>
+
+<div class="bar" role="group" aria-label="নিয়ন্ত্রণ">
+<div class="wrap">
+<button type="button" class="btn" id="pauseBtn">⏸ গতি থামান</button>
+<label for="intensity">তীব্রতা <input type="range" id="intensity" min="1" max="10" step="1" value="5" aria-describedby="kv"> <output id="kv" for="intensity">৫</output></label>
+<span id="motionState" role="status" aria-live="polite"></span>
+</div>
+</div>
+
+<main id="main" class="wrap">
+
+<section class="demo" id="spiral" aria-labelledby="h-spiral">
+<div class="stage"><div class="spiral" id="spiralBox" role="img" aria-label="একটির ভেতর আরেকটি ঘোরানো বর্গ, যা ঘূর্ণির মতো দেখায়"></div></div>
+<div class="card">
+<span class="num">০১</span>
+<h2 id="h-spiral">ঘূর্ণায়মান বর্গ</h2>
+<p>একটির ভেতরে আরেকটি বর্গ সামান্য কোণে ঘোরানো। কালো-সাদা রেখা পাশাপাশি সাজানো থাকায় চোখে ভেতরের দিকে টানা এক সর্পিল ঘূর্ণি তৈরি হয়, অথচ প্রতিটি বর্গ আসলে সোজা।</p>
+<p>স্লাইডার বাড়ালে প্রতিটি ধাপের কোণ ও গতি দুটোই বাড়ে।</p>
+<p class="note"><b>ধারণার টুকরো:</b> আমাদের দৃষ্টি কাছাকাছি ছোট কোণের সারিকে জুড়ে একটানা বাঁকা রেখা হিসেবে দেখতে চায়।</p>
+</div>
+</section>
+
+<section class="demo" id="grid" aria-labelledby="h-grid">
+<div class="stage"><div class="hg" id="hgrid" role="img" aria-label="ফাঁক রেখে সাজানো গাঢ় বর্গের গ্রিড, ফাঁকের মোড়ে ধূসর ছায়া-বিন্দু দেখা যেতে পারে"></div></div>
+<div class="card">
+<span class="num">০২</span>
+<h2 id="h-grid">হারম্যান গ্রিড</h2>
+<p>গাঢ় ঘরগুলোর মাঝের সাদা ফাঁকের মোড়ে ধূসর ছায়া-বিন্দু ভেসে ওঠে। যে মোড়ে সরাসরি তাকাবেন, সেখানকার বিন্দু মিলিয়ে যাবে, অন্য মোড়ে আবার জাগবে।</p>
+<p>তীব্রতা স্লাইডার ঘরের গাঢ়ত্ব, অর্থাৎ বৈপরীত্য বদলায়। কম বৈপরীত্যে বিন্দু ক্ষীণ হয়ে আসে।</p>
+<p class="note"><b>ধারণার টুকরো:</b> আলো-অন্ধকার আমরা আশপাশের তুলনায় বিচার করি। সাধারণত একে পার্শ্ববর্তী বৈপরীত্যের প্রভাব দিয়ে ব্যাখ্যা করা হয়।</p>
+</div>
+</section>
+
+<section class="demo" id="triangle" aria-labelledby="h-tri">
+<div class="stage">
+<svg class="tri" viewBox="0 0 200 190" role="img" aria-label="তিনটি দণ্ড দিয়ে আঁকা অসম্ভব ত্রিভুজ, যেখানে প্রতিটি দণ্ড পরেরটির ওপরে চক্রাকারে বসেছে">
+<defs>
+<g id="barB"><rect x="-75" y="-14" width="150" height="14" fill="#ff4d3d"/><rect x="-75" y="0" width="150" height="14" fill="#a3281d"/></g>
+<g id="barL"><rect x="-75" y="-14" width="150" height="14" fill="#c6ff2e"/><rect x="-75" y="0" width="150" height="14" fill="#7f9f14"/></g>
+<g id="barR"><rect x="-75" y="-14" width="150" height="14" fill="#f4ecdc"/><rect x="-75" y="0" width="150" height="14" fill="#a89c82"/></g>
+<clipPath id="topClip"><rect x="0" y="0" width="200" height="60"/></clipPath>
+</defs>
+<use href="#barL" transform="translate(65.4 85) rotate(-60)"/>
+<use href="#barB" transform="translate(100 145)"/>
+<use href="#barR" transform="translate(134.6 85) rotate(60)"/>
+<g clip-path="url(#topClip)"><use href="#barL" transform="translate(65.4 85) rotate(-60)"/></g>
+</svg>
+</div>
+<div class="card">
+<span class="num">০৩</span>
+<h2 id="h-tri">অসম্ভব ত্রিভুজ</h2>
+<p>তিনটি দণ্ড প্রতি কোণে একটি আরেকটির ওপর দিয়ে গেছে বলে মনে হয়। বাঁ দণ্ড ডানটির ওপরে, ডান দণ্ড নিচেরটির ওপরে, নিচের দণ্ড বাঁটির ওপরে। এই চক্র বাস্তবে সম্ভব নয়, কাগজের ছবিতে সম্ভব।</p>
+<p class="note"><b>ধারণার টুকরো:</b> আমরা প্রতিটি কোণ আলাদাভাবে বুঝে নিই, কিন্তু পুরো আকৃতির সঙ্গতি খুব কমই যাচাই করি।</p>
+</div>
+</section>
+
+<section class="demo" id="afterimage" aria-labelledby="h-after">
+<div class="stage">
+<div>
+<div class="after" id="afterBox" role="img" aria-label="মাঝখানে একটি কালো বিন্দু"><i></i></div>
+<div class="count" id="count" aria-hidden="true"></div>
+</div>
+</div>
+<div class="card">
+<span class="num">০৪</span>
+<h2 id="h-after">আফটারইমেজ</h2>
+<ol>
+<li>আরামে বসুন, ঘরে স্বাভাবিক আলো রাখুন।</li>
+<li>“শুরু করুন” চাপুন এবং ১৫ সেকেন্ড মাঝের কালো বিন্দুতে তাকিয়ে থাকুন। স্বাভাবিকভাবে চোখের পাতা ফেলুন।</li>
+<li>রং মিলিয়ে গেলে ফাঁকা অংশে তাকান এবং কী দেখেন খেয়াল করুন।</li>
+</ol>
+<p><strong>নিরাপত্তা:</strong> চোখে কষ্ট বা অস্বস্তি হলে “থামুন” চাপুন। কখনো সূর্য বা খুব উজ্জ্বল আলোর দিকে তাকাবেন না।</p>
+<div class="row">
+<button type="button" class="btn" id="startAfter">শুরু করুন</button>
+<button type="button" class="btn" id="stopAfter">থামুন</button>
+</div>
+<p id="afterStatus" role="status" aria-live="polite">প্রস্তুত হলে “শুরু করুন” চাপুন।</p>
+<p class="note"><b>ধারণার টুকরো:</b> একই রং অনেকক্ষণ দেখলে পরে বিপরীত রঙের ঝাপসা আভা দেখা যেতে পারে। কতটা স্পষ্ট হবে তা মানুষভেদে ভিন্ন।</p>
+</div>
+</section>
+
+<section class="demo" id="quiz" aria-labelledby="h-quiz">
+<div class="card" style="grid-column:1/-1;max-width:640px">
+<span class="num">০৫</span>
+<h2 id="h-quiz">ছোট্ট কুইজ</h2>
+<fieldset>
+<legend>১. হারম্যান গ্রিডে ধূসর বিন্দু কোথায় দেখা যায়?</legend>
+<label><input type="radio" name="q1" value="a"> গাঢ় ঘরগুলোর ভেতরে</label>
+<label><input type="radio" name="q1" value="b"> সাদা ফাঁকের মোড়ে</label>
+<label><input type="radio" name="q1" value="c"> গ্রিডের বাইরের সাদা জায়গায়</label>
+<p class="fb" id="fb1"></p>
+</fieldset>
+<fieldset>
+<legend>২. অসম্ভব ত্রিভুজ কেন ধাঁধা তৈরি করে?</legend>
+<label><input type="radio" name="q2" value="a"> কারণ ছবির রং বদলে যায়</label>
+<label><input type="radio" name="q2" value="b"> কারণ প্রতিটি অংশ ঠিক, কিন্তু একসঙ্গে ত্রিমাত্রিক সঙ্গতি নেই</label>
+<label><input type="radio" name="q2" value="c"> কারণ ছবিটি নিজে নড়াচড়া করে</label>
+<p class="fb" id="fb2"></p>
+</fieldset>
+<div class="row">
+<button type="button" class="btn" id="revealBtn">উত্তর দেখুন</button>
+<button type="button" class="btn" id="resetQuiz">আবার চেষ্টা করুন</button>
+</div>
+<p id="quizStatus" role="status" aria-live="polite"></p>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">এই পাতায় কোনো ট্র্যাকিং, কুকি বা বাইরের ফাইল নেই। বিষয়বস্তু সাধারণ শিক্ষামূলক উদ্দেশ্যে, চিকিৎসা পরামর্শ নয়।</div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var bn=new Intl.NumberFormat('bn-BD');
+var mq=window.matchMedia('(prefers-reduced-motion: reduce)');
+var paused=mq.matches;
+var box=$('#spiralBox'),hg=$('#hgrid'),range=$('#intensity'),kv=$('#kv');
+var pb=$('#pauseBtn'),ms=$('#motionState');
+var i,el;
+
+for(i=0;i<28;i++){el=document.createElement('span');el.style.setProperty('--n',i);box.appendChild(el)}
+for(i=0;i<36;i++){hg.appendChild(document.createElement('span'))}
+
+function applyIntensity(){
+var v=+range.value;
+box.style.setProperty('--tw',(1+v*0.55)+'deg');
+box.style.setProperty('--dur',(66-v*5)+'s');
+hg.style.setProperty('--cell','hsl(28 14% '+Math.round(80-70*(v-1)/9)+'%)');
+kv.textContent=bn.format(v);
+}
+function applyMotion(){
+document.body.classList.toggle('paused',paused);
+pb.textContent=paused?'▶ গতি চালু করুন':'⏸ গতি থামান';
+ms.textContent=paused?'গতি এখন বন্ধ':'গতি এখন চালু';
+}
+range.addEventListener('input',applyIntensity);
+pb.addEventListener('click',function(){paused=!paused;applyMotion()});
+if(mq.addEventListener){mq.addEventListener('change',function(e){if(e.matches){paused=true;applyMotion()}})}
+applyIntensity();applyMotion();
+
+/* navigation */
+var tabs=$$('#nav button'),demos=$$('.demo');
+function show(id){
+demos.forEach(function(s){s.hidden=!(id==='all'||s.id===id)});
+tabs.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-show')===id))});
+}
+tabs.forEach(function(b){b.addEventListener('click',function(){show(b.getAttribute('data-show'))})});
+show('spiral');
+
+/* afterimage */
+var ab=$('#afterBox'),cnt=$('#count'),st=$('#afterStatus'),timer=null,left=0;
+function stopAfter(msg){
+clearInterval(timer);timer=null;
+ab.classList.remove('on');cnt.textContent='';
+st.textContent=msg;
+}
+$('#startAfter').addEventListener('click',function(){
+if(timer){return}
+left=15;ab.classList.add('on');cnt.textContent=bn.format(left);
+st.textContent='মাঝের কালো বিন্দুতে তাকিয়ে থাকুন।';
+timer=setInterval(function(){
+left--;
+if(left<=0){stopAfter('সময় শেষ! এবার ফাঁকা ধূসর-সাদা অংশে তাকান।')}
+else{cnt.textContent=bn.format(left)}
+},1000);
+});
+$('#stopAfter').addEventListener('click',function(){
+stopAfter(timer?'থামানো হয়েছে। প্রস্তুত হলে আবার শুরু করুন।':'প্রস্তুত হলে “শুরু করুন” চাপুন।');
+});
+
+/* quiz */
+var answers={
+q1:{key:'b',text:'সাদা ফাঁকের মোড়ে',why:'গাঢ় ঘরের মাঝের উজ্জ্বল ফাঁকের মোড়ে ধূসর ছায়া-বিন্দু দেখা যায়।'},
+q2:{key:'b',text:'প্রতিটি অংশ ঠিক, কিন্তু একসঙ্গে ত্রিমাত্রিক সঙ্গতি নেই',why:'স্থানীয়ভাবে সব কোণ সম্ভব, সম্পূর্ণ বস্তু হিসেবে নয়।'}
+};
+function reveal(){
+var correct=0;
+Object.keys(answers).forEach(function(q,n){
+var a=answers[q],c=document.querySelector('input[name="'+q+'"]:checked'),pre;
+if(!c){pre='আপনি কোনো উত্তর বাছেননি।'}
+else if(c.value===a.key){pre='সঠিক!';correct++}
+else{pre='আপনার উত্তর মেলেনি।'}
+$('#fb'+(n+1)).textContent=pre+' সঠিক উত্তর: '+a.text+'। '+a.why;
+});
+$('#quizStatus').textContent='আপনি '+bn.format(2)+'টির মধ্যে '+bn.format(correct)+'টি সঠিক করেছেন।';
+}
+$('#revealBtn').addEventListener('click',reveal);
+$('#resetQuiz').addEventListener('click',function(){
+$$('#quiz input[type=radio]').forEach(function(r){r.checked=false});
+$('#fb1').textContent='';$('#fb2').textContent='';$('#quizStatus').textContent='কুইজ নতুন করে শুরু হয়েছে।';
+});
+})();
+</script>
+</body>
+</html>
